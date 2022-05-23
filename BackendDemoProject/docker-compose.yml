@@ -1,0 +1,40 @@
+version: '3.8'
+
+services: 
+  mysqldb:
+   image: mysql:5.7
+   restart: always
+   environment:
+    - MYSQL_ROOT_PASSWORD=abc123
+    - MYSQL_DATABASE=start
+    - MYSQL_PASSWORD=abc123
+   ports:
+   - "3306:3306" 
+   dns:
+    - 127.0.0.1
+   volumes: 
+     - ./data:/var/lib/mysql
+
+     
+  nodeapp:
+   build: .
+   container_name: nodecontainer
+   ports:
+    - "8080:8080"
+   depends_on:
+    - mysqldb
+    - mongo
+   
+   volumes:
+    - .:/home/node/app
+   links:
+    - "mysql:db1"
+    - "mongo:db2"
+  mongo:
+   image: mongo
+   restart: always
+   ports:
+    - "27017"
+   volumes:
+    - ./:/data/db 
+   
