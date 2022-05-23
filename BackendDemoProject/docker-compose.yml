@@ -1,40 +1,47 @@
-version: '3.8'
+version: "3"
 
-services: 
-  mysqldb:
-   image: mysql:5.7
-   restart: always
-   environment:
+services:
+#starting mongo service
+  mongo_db:
+    container_name: MongoDB_container
+    image: mongo:latest
+    restart: always
+    volumes: 
+      - mongo_db:/data/db
+
+#starting mysql service
+  mysql_db:
+    container_name: mysql
+    image: mysql:8.0
+    environment:
     - MYSQL_ROOT_PASSWORD=abc123
     - MYSQL_DATABASE=start
     - MYSQL_PASSWORD=abc123
-   ports:
-   - "3306:3306" 
-   dns:
-    - 127.0.0.1
-   volumes: 
-     - ./data:/var/lib/mysql
+    volumes:
+      - mysql_db:/data/db
 
-     
-  nodeapp:
-   build: .
-   container_name: nodecontainer
-   ports:
-    - "8080:8080"
-   depends_on:
-    - mysqldb
-    - mongo
-   
-   volumes:
-    - .:/home/node/app
-   links:
-    - "mysql:db1"
-    - "mongo:db2"
-  mongo:
-   image: mongo
-   restart: always
-   ports:
-    - "27017"
-   volumes:
-    - ./:/data/db 
-   
+#starting api service
+  api:
+    container_name: node
+    image: new:latest
+    ports:
+      - 8080:8080
+    environment:
+      PORT: 8080
+      MONGOBD_URI: mongodb://mongodb_db:27017
+      DB_NAME: backend_test
+      NAME: Superuser
+      MYSQLDB_URI: mysqldb://mysql_db:3306
+    depends_on:
+      - mongo_db
+      - mysql_db
+
+#to create volumes
+volumes:
+  mongo_db:
+  mysql_db:
+
+
+
+
+
