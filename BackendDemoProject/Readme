@@ -7,7 +7,7 @@ Docker compose file created  -In which  3 containers launched
 For persistency volumes is used and for the order purpose depends_on attribute is used 
 Command to run 
 docker compose up -d 
-http://localhost:8080
+http://localhost:8080/documentation
 
 Steps for creating self signed certficate:
 Creating private key = openssl genrsa -des3 -out domain.key 2048 
