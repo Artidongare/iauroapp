@@ -23,6 +23,7 @@ services:
 #starting api service
   api:
     container_name: node
+#   build: . 
     image: new:latest
     ports:
       - 8080:8080
